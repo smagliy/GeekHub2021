@@ -2,6 +2,6 @@
 # з ключами від 0 до введеного числа, а значення для цих ключів - це квадрат ключа.
 number = int(input('Positive number: '))
 dict_1 = dict()
-for x in range(1, number+1):
+for x in range(number):
     dict_1[x] = x**2
 print(dict_1)

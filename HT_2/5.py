@@ -4,8 +4,10 @@ dict_1 = {'name': 'Kate',
           'surname': 'Petrova',
           'age': 25,
           'experience': 25}
-result = {}
-for key, value in dict_1.items():
-    if value not in result.values():
-        result[key] = value
-print(result)
+temp = []
+for key, value in list(dict_1.items()):
+    if value not in temp:
+        temp.append(value)
+    else:
+        dict_1.pop(key, value)
+print(dict_1)
