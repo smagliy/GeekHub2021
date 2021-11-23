@@ -15,9 +15,9 @@ def fun_3():
 
 
 def together_fun():
-    print(fun_1())
-    print(fun_2())
-    print(fun_3())
+    a = fun_1()
+    b = fun_2()
+    c = fun_3()
+    return a, b, c
 
-
-together_fun()
+print(together_fun())

@@ -14,7 +14,7 @@ def equal(x1, y1):
         print(f'y is longer than x at {z}')
     elif x1 == y1:
         print('x equals y')
-    return x1 - y1
+    return
 
 
 print(equal(x, y))

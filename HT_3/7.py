@@ -9,7 +9,10 @@ def calculator(operation, x, y):
         elif operation == '*':
             print(f'Multiplication x and y equal: {x*y}')
         elif operation == '/':
-            print(f'Dividing x and y equal: {x/y}')
+            if y == 0:
+                print('zero share')
+            else:
+                print(f'Dividing x and y equal: {x/y}')
     else:
         print('Unfortunately, there is no such operation!')
 
