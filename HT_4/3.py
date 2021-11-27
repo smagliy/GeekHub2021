@@ -3,8 +3,8 @@
 def is_prime(n):
     for i in range(2, n):
         if not n % i:
-            return True
-    return False
+            return False
+    return True
 
 
 number_input = int(input('Please, write number from 0 to 1000: '))

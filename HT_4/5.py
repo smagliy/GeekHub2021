@@ -8,4 +8,4 @@ def fibonacci(number):
 
 
 num = int(input('Write a number: '))
-fibonacci(num)
+print(fibonacci(num))
