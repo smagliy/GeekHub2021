@@ -9,5 +9,5 @@ def function_list(list_1):
     return dict_list
 
 
-list_1 = map(str, input('write a list without commas: ').split())
+list_1 = [1, 2, 3, 1, 2, 5, ("a", "m"), ("a", "m")]
 print(function_list(list_1))
