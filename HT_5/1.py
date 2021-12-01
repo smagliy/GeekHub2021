@@ -9,21 +9,26 @@ class LoginException(Exception):
     pass
 
 
-def register(username, password, silent=False):
+def list_users():
     list_user = [('kate', 'kate123'),
                  ('anna', 'anna123'),
                  ('alex', 'alex123'),
                  ('jack', 'jack123'),
                  ('ivan', 'ivan123')]
+    return list_user
+
+
+def register(username, password, silent=False):
     try:
-        if (username, password) is list_user:
+        if (username, password) is list_users():
             return True
-        elif (username, password) is not list_user and silent is True:
+        elif silent is True:
             return False
     except LoginException:
-        return 'LoginException'
+        print('LoginException')
+        raise LoginException
 
 
-print(register('kate', 'kate123', silent=False))
+print(register('anna', 'anna123'))
 print(register('k', 'kate23', silent=True))
-print(register('kate', 'kate', silent=False))
+print(register('jack', '2552e'))
