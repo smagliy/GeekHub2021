@@ -10,25 +10,27 @@ class LoginException(Exception):
 
 
 def list_users():
-    list_user = [('kate', 'kate123'),
-                 ('anna', 'anna123'),
-                 ('alex', 'alex123'),
-                 ('jack', 'jack123'),
-                 ('ivan', 'ivan123')]
+    list_user = {'kate': 'kate123',
+                 'anna': 'anna123',
+                 'alex': 'alex123',
+                 'jack': 'jack123',
+                 'ivan': 'ivan123'}
     return list_user
 
 
 def register(username, password, silent=False):
-    try:
-        if (username, password) is list_users():
-            return True
-        elif silent is True:
-            return False
-    except LoginException:
-        print('LoginException')
-        raise LoginException
+    for key, value in list_users().items():
+        try:
+            if key == username and value == password:
+                return True
+            elif silent is True:
+                return False
+            else:
+                raise LoginException
+        except LoginException:
+            return 'LoginException'
 
 
-print(register('anna', 'anna123'))
+print(register('kate', 'kate123'))
 print(register('k', 'kate23', silent=True))
 print(register('jack', '2552e'))

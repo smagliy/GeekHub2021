@@ -10,21 +10,31 @@
 #       Name: vasya
 #       Password: vasyapupkin2000
 #       Status: OK
+def validation(name, password):
+    dict_users = [{name: password} if 3 < len(name) < 50 and len(password) >= 8 and any(map(str.isdigit, password)) else print('Password and name wrong!')]
+    if name == password:
+        print('Comment: password is`nt equal name')
+    else:
+        return dict_users
 
 
-
-def verification(list_users):
-    for elem in list_users:
-        print(f'Name:{elem[0]}')
-        print(f'Password: {elem[1]}')
-        for elem1 in elem[1]:
+def verification(dict_users):
+    for elem in dict_users:
+        for key, value in elem.items():
+            print(f'Name: {key}')
+            print(f'Password: {value}')
             try:
-                int(elem1)
-                print('Status: OK')
-                break
-            except ValueError:
+                if validation(key, value):
+                    print('Status: OK')
+                else:
+                    raise Exception
+            except Exception:
                 print('Status: password must have at least one digit')
 
 
-list_u = [['kate', '1254fdgh'], ['lkuy', 'kjxgyxjs'], ['anna_1', 'ag125412'], ['fish', 'rth101010']]
-verification(list_u)
+
+
+dict_use = [{'kate': 'kate1234',
+            'anna': 'anna',
+            'alex': 'alex123zxdcf'}]
+verification(dict_use)
