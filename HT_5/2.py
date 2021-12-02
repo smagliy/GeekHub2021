@@ -4,8 +4,8 @@
 #    - щось своє :)
 #    Якщо якийсь із параментів не відповідає вимогам - породити виключення із відповідним текстом.
 def validation(name, password):
-    try:
-        if 3 < len(name) < 50:
+    if 3 < len(name) < 50:
+        if name != password:
             if len(password) >= 8:
                 if any(map(str.isdigit, password)):
                     dict_users = [{name: password}]
@@ -16,14 +16,12 @@ def validation(name, password):
             else:
                 raise Exception("Password doesn't have 8 and more symbols")
         else:
-            raise Exception("Password doesn't have 8 and more symbols")
-    except Exception as err:
-        return err
-
+            raise Exception("Password isn`t equal name")
+    else:
+        raise Exception("Password doesn't have 8 and more symbols")
 
 
 print(validation('cvbnjk,', 'xcfghjkl,m1'))
-print(validation('kate1234', 'katezxcvbnm'))
-print(validation('as', 'asdfghjkl1'))
+print(validation('kate1234', 'kate1234'))
 
 
