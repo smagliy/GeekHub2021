@@ -9,18 +9,17 @@ def validation(name, password):
             if len(password) >= 8:
                 if any(map(str.isdigit, password)):
                     dict_users = [{name: password}]
-                    print(dict_users)
+                    print('User is registered')
+                    return dict_users
                 else:
-                    print("Password doesn't have one or more digit")
-                    raise Exception
+                    raise Exception("Password doesn't have one or more digit")
             else:
-                print("Password doesn't have 8 and more symbols")
-                raise Exception
+                raise Exception("Password doesn't have 8 and more symbols")
         else:
-            print('Name must have more than 3 characters and less than 50 characters')
-            raise Exception
-    except Exception:
-        print("Login excepted")
+            raise Exception("Password doesn't have 8 and more symbols")
+    except Exception as err:
+        return err
+
 
 
 print(validation('cvbnjk,', 'xcfghjkl,m1'))
