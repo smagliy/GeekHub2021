@@ -7,10 +7,6 @@ def range_1(start, stop=0, step=1):
         while 0 < abs(start - stop):
             yield stop
             stop += step
-    elif start > stop:
-        while 0 < abs(stop - start):
-            yield start
-            start -= step
     else:
         while 0 < abs(stop - start):
             yield start
@@ -18,16 +14,18 @@ def range_1(start, stop=0, step=1):
 
 
 list_range = []
-for i in range_1(10):
+for i in range_1(0):
     list_range.append(i)
 print(list_range)
 
 list_range_1 = []
-for i in range_1(10, 2):
+for i in range_1(2, 10):
     list_range_1.append(i)
 print(list_range_1)
 
-list_range_2 = []
-for i in range_1(10, 20, 2):
-    list_range_2.append(i)
-print(list_range_2)
+list_rang = []
+for i in range_1(20, 10, -2):
+    list_rang.append(i)
+print(list_rang)
+
+
