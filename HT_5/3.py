@@ -11,19 +11,21 @@
 #       Password: vasyapupkin2000
 #       Status: OK
 def validation(name, password):
-    try:
-        if 3 < len(name) < 50:
+    if 3 < len(name) < 50:
+        if name != password:
             if len(password) >= 8:
                 if any(map(str.isdigit, password)):
-                    return "OK"
+                    dict_users = [{name: password}]
+                    print('User is registered')
+                    return dict_users
                 else:
                     raise Exception("Password doesn't have one or more digit")
             else:
                 raise Exception("Password doesn't have 8 and more symbols")
         else:
-            raise Exception("Password doesn't have 8 and more symbols")
-    except Exception as err:
-       return err
+            raise Exception("Password isn`t equal name")
+    else:
+        raise Exception("Password doesn't have 8 and more symbols")
 
 
 def verification(dict_users):
