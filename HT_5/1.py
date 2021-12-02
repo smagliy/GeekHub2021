@@ -9,17 +9,13 @@ class LoginException(Exception):
     pass
 
 
-def list_users():
+def register(username, password, silent=False):
     list_user = {'kate': 'kate123',
                  'anna': 'anna123',
                  'alex': 'alex123',
                  'jack': 'jack123',
                  'ivan': 'ivan123'}
-    return list_user
-
-
-def register(username, password, silent=False):
-    for key, value in list_users().items():
+    for key, value in list_user.items():
         try:
             if key == username and value == password:
                 return True
