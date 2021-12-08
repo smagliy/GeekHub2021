@@ -31,6 +31,13 @@ def start():
                     3: "Add new user",
                     4: "Withdraw money from account",
                     5: "Exit"}
+    print('''
+        1 - "Sell and your balance",
+        2 - "Replenish the balance",
+        3 - "Add new user",
+        4 - "Withdraw money from account",
+        5 - "Exit"
+    ''')
     for i in range(5):
         print(dict_menu)
         res = int(input('Write your command: '))
