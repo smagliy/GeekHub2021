@@ -21,25 +21,22 @@ import csv
 import json
 
 
-name_1 = 'Dana'
-password_1 = 'dana123'
-
-
 def start():
     dict_menu ={1: "Sell and your balance",
                     2: "Replenish the balance",
                     3: "Add new user",
                     4: "Withdraw money from account",
                     5: "Exit"}
-    print('''
-        1 - "Sell and your balance",
-        2 - "Replenish the balance",
-        3 - "Add new user",
-        4 - "Withdraw money from account",
-        5 - "Exit"
-    ''')
+    name_1 = input('Write your name: ')
+    password_1 = input('Write your password ')
     for i in range(5):
-        print(dict_menu)
+        print('''
+                1 - "Sell and your balance",
+                2 - "Replenish the balance",
+                3 - "Add new user",
+                4 - "Withdraw money from account",
+                5 - "Exit"
+            ''')
         res = int(input('Write your command: '))
         if res == 1 or res == 2 or res == 4:
             authorization(name_1, password_1)
@@ -74,10 +71,10 @@ def authorization(name, password):
         user_read = csv.DictReader(user, delimiter=',')
         for row in user_read:
             if name == row['Name']:
-                if password == row['Passport']:
+                if password == row['Password']:
                     return
-            else:
-                return 'Password or name wrong'
+                else:
+                    raise Exception('Password and name wrong')
 
 
 def transaction(name, operation):
