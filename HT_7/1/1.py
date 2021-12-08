@@ -19,7 +19,10 @@
 #     - далі - фантазія і креатив :)
 import csv
 import json
-import glob
+
+
+name_1 = 'Dana'
+password_1 = 'dana123'
 
 
 def start():
@@ -28,8 +31,6 @@ def start():
                     3: "Add new user",
                     4: "Withdraw money from account",
                     5: "Exit"}
-    name_1 = input('Write your name: ')
-    password_1 = input('Write your password: ')
     for i in range(5):
         print(dict_menu)
         res = int(input('Write your command: '))
@@ -53,11 +54,11 @@ def start():
 
 def user_new():
     name = input('Write your name: ')
-    password = input('Write your password: ')
-    with open('1/users.csv', 'a') as new_user:
-        fields = [name, password]
-        writer = csv.writer(new_user)
-        writer.writerow(fields)
+    password = input('Write your password ')
+    fields = ['Name', 'Password']
+    with open('users.csv', 'a') as new_user:
+        writer = csv.DictWriter(new_user, fieldnames=fields)
+        writer.writerow({'Name': name, 'Password': password})
     print('Congratulations!! New user append')
 
 
@@ -66,8 +67,8 @@ def authorization(name, password):
         user_read = csv.DictReader(user, delimiter=',')
         for row in user_read:
             if name == row['Name']:
-                if password == row['Password']:
-                    print(f'Hello {name}')
+                if password == row['Passport']:
+                    return
             else:
                 return 'Password or name wrong'
 
@@ -79,8 +80,8 @@ def transaction(name, operation):
         data = json.load(operation)
         data["Operation"].append(new_operation)
 
-        with open(file[0], 'w') as outfile:
-            json.dump(data, outfile)
+    with open(file, 'w') as outfile:
+        json.dump(data, outfile)
 
 
 def balance(name, sum_on=0, sum_off=0):
@@ -98,4 +99,3 @@ def balance(name, sum_on=0, sum_off=0):
 
 
 start()
-
