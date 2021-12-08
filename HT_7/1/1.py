@@ -23,17 +23,17 @@ import glob
 
 
 def start():
-    for i in range(5):
-        dict_menu ={1: "Sell and your balance",
+    dict_menu ={1: "Sell and your balance",
                     2: "Replenish the balance",
                     3: "Add new user",
                     4: "Withdraw money from account",
                     5: "Exit"}
+    name_1 = input('Write your name: ')
+    password_1 = input('Write your password: ')
+    for i in range(5):
         print(dict_menu)
         res = int(input('Write your command: '))
         if res == 1 or res == 2 or res == 4:
-            name_1 = input('Write your name: ')
-            password_1 = input('Write your password: ')
             authorization(name_1, password_1)
             transaction(name_1, dict_menu[res])
             if res == 1:
@@ -62,7 +62,7 @@ def user_new():
 
 
 def authorization(name, password):
-    with open('1/users.csv', 'rt') as user:
+    with open('users.csv', 'rt') as user:
         user_read = csv.DictReader(user, delimiter=',')
         for row in user_read:
             if name == row['Name']:
@@ -73,7 +73,7 @@ def authorization(name, password):
 
 
 def transaction(name, operation):
-    file = f'1/{name}_transaction.json'
+    file = f'{name}_transaction.json'
     new_operation = {"operation": operation}
     with open(file) as operation:
         data = json.load(operation)
@@ -84,7 +84,7 @@ def transaction(name, operation):
 
 
 def balance(name, sum_on=0, sum_off=0):
-    file = f'1/{name}_balance.txt'
+    file = f'{name}_balance.txt'
     with open(file, 'r+') as file:
         for row in file:
             print(f'Before: You have {row} in your account.')
