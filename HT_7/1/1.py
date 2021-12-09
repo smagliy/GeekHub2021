@@ -22,13 +22,11 @@ import json
 
 
 def start():
-    dict_menu ={1: "Sell and your balance",
-                    2: "Replenish the balance",
-                    3: "Add new user",
-                    4: "Withdraw money from account",
-                    5: "Exit"}
-    name_1 = input('Write your name: ')
-    password_1 = input('Write your password ')
+    dict_menu = {1: "Sell and your balance",
+                 2: "Replenish the balance",
+                 3: "Add new user",
+                 4: "Withdraw money from account",
+                 5: "Exit"}
     for i in range(5):
         print('''
                 1 - "Sell and your balance",
@@ -39,6 +37,8 @@ def start():
             ''')
         res = int(input('Write your command: '))
         if res == 1 or res == 2 or res == 4:
+            name_1 = input('Write your name: ')
+            password_1 = input('Write your password ')
             authorization(name_1, password_1)
             transaction(name_1, dict_menu[res])
             if res == 1:
@@ -63,6 +63,12 @@ def user_new():
     with open('users.csv', 'a') as new_user:
         writer = csv.DictWriter(new_user, fieldnames=fields)
         writer.writerow({'Name': name, 'Password': password})
+    file_name = f'{name}_balance.txt'
+    with open(file_name, 'w') as new_file:
+        new_file.write("0")
+    file_name1 = f'{name}_transaction.json'
+    with open(file_name1, 'w') as new_file:
+        json.dump({"Name": f"{name}", "Operation": []}, new_file)
     print('Congratulations!! New user append')
 
 
@@ -91,15 +97,16 @@ def transaction(name, operation):
 def balance(name, sum_on=0, sum_off=0):
     file = f'{name}_balance.txt'
     with open(file, 'r+') as file:
-        for row in file:
-            print(f'Before: You have {row} in your account.')
-            if int(row) > sum_off:
-                a = int(row) + sum_on - sum_off
-                print(f'After: You have {a} in your account.')
-            else:
-                return 'The value you want to remove is too great'
-        file.seek(0)
-        file.write(str(a))
+        print(f'You have {file.read()} in your account!')
+        if sum_off > 0 and sum_on > 0:
+            for row in file:
+                if int(row) > sum_off:
+                    a = int(row) + sum_on - sum_off
+                    print(f'You have {a} in your account after operation!')
+                else:
+                    raise Exception('The value you want to remove is too great or the value is`nt positive number')
+            file.seek(0)
+            file.write(str(a))
 
 
 start()
