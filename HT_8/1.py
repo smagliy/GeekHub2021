@@ -158,9 +158,9 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
                     while atm(sum_off):
                         final_balance_1 = int(row) - sum_off
                         print(f'You have {final_balance_1} in account after operation!')
+                        file.seek(0)
+                        file.write(str(final_balance_1))
                         break
-                    file.seek(0)
-                    file.write(str(final_balance_1))
                     break
                 else:
                     print("The money isn't a negative number or you wrote a larger amount than you have!")
