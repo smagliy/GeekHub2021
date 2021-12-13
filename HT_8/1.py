@@ -58,7 +58,6 @@ def menu(dict_menu):
         elif res == 3:
             get_sum = int(input('Write amount: '))
             add_and_get_balance(name1, sum_on=0, sum_off=get_sum)
-            atm(get_sum)
         else:
             print('Thank you for your answer. Have a good day!')
             break
@@ -86,6 +85,8 @@ def security_guard():
                     data["50hr"] += int(component_50hr)
                     component_20hr = input('How many bills do you want to put in the 20 hryvnias compartment? Put: ')
                     data["20hr"] += int(component_20hr)
+                    component_10hr = input('How many bills do you want to put in the 10 hryvnias compartment? Put: ')
+                    data["10hr"] += int(component_20hr)
                     print(data)
 
                     with open("atm.json", 'w') as outfile:
@@ -170,7 +171,7 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
 def atm(need_money):
     with open("atm.json", "r+") as file:
         data = json.load(file)
-        nom = [1000, 500, 200, 100, 50, 20]
+        nom = [1000, 500, 200, 100, 50, 20, 10]
         flag = True
         while flag:
             flag = False
@@ -228,10 +229,17 @@ def atm(need_money):
                     return True
                 else:
                     flag = True
-            if need_money == 0:
-                with open("atm.json", 'w') as outfile:
-                    json.dump(data, outfile)
+            if need_money // 10 > 0 and data['10hr'] != 0 and \
+                    (need_money - 10 == 0 or [i for i in nom if (need_money - 10) // i > 0]):
+                data['10hr'] -= 1
+                print('10hr')
+                need_money -= 10
+                if need_money == 0:
+                    with open("atm.json", 'w') as outfile:
+                        json.dump(data, outfile)
                     return True
+                else:
+                    flag = True
         if need_money != 0:
             print('Come up with another amount')
             return False
