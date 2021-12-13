@@ -155,9 +155,10 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
         elif sum_off > 0:
             for row in file:
                 if int(row) > sum_off:
-                    atm(sum_off)
-                    final_balance_1 = int(row) - sum_off
-                    print(f'You have {final_balance_1} in account after operation!')
+                    while atm(sum_off):
+                        final_balance_1 = int(row) - sum_off
+                        print(f'You have {final_balance_1} in account after operation!')
+                        break
                     file.seek(0)
                     file.write(str(final_balance_1))
                     break
@@ -179,7 +180,7 @@ def atm(need_money):
                 print('1000hr')
                 need_money -= 1000
                 if need_money == 0:
-                    break
+                    return True
                 else:
                     flag = True
             if need_money // 500 > 0 and data['500hr'] != 0 and \
@@ -188,8 +189,7 @@ def atm(need_money):
                 print('500hr')
                 need_money -= 500
                 if need_money == 0:
-                    flag = False
-                    break
+                    return True
                 else:
                     flag = True
             if need_money // 200 > 0 and data['200hr'] != 0 and \
@@ -198,8 +198,7 @@ def atm(need_money):
                 print('200hr')
                 need_money -= 200
                 if need_money == 0:
-                    flag = False
-                    break
+                    return True
                 else:
                     flag = True
             if need_money // 100 > 0 and data['100hr'] != 0 and \
@@ -208,8 +207,7 @@ def atm(need_money):
                 print('100hr')
                 need_money -= 100
                 if need_money == 0:
-                    flag = False
-                    break
+                    return True
                 else:
                     flag = True
             if need_money // 50 > 0 and data['50hr'] != 0 and \
@@ -218,8 +216,7 @@ def atm(need_money):
                 print('50hr')
                 need_money -= 50
                 if need_money == 0:
-                    flag = False
-                    break
+                    return True
                 else:
                     flag = True
             if need_money // 20 > 0 and data['20hr'] != 0 and \
@@ -228,16 +225,16 @@ def atm(need_money):
                 print('20hr')
                 need_money -= 20
                 if need_money == 0:
-                    flag = False
-                    break
+                    return True
                 else:
                     flag = True
             if need_money == 0:
                 with open("atm.json", 'w') as outfile:
                     json.dump(data, outfile)
-            elif need_money != 0:
-                print('Come up with another amount')
-                break
+                    return True
+        if need_money != 0:
+            print('Come up with another amount')
+            return False
 
 
 start()
