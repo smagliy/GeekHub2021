@@ -58,6 +58,7 @@ def menu(dict_menu):
         elif res == 3:
             get_sum = int(input('Write amount: '))
             add_and_get_balance(name1, sum_on=0, sum_off=get_sum)
+            atm(get_sum)
         else:
             print('Thank you for your answer. Have a good day!')
             break
@@ -97,15 +98,13 @@ def security_guard():
 
 def authorization(name, password):
     with open('users.csv', 'rt') as user:
-        user_read = csv.DictReader(user, delimiter=',')
+        user_read = csv.reader(user)
         for row in user_read:
-            if name == row['Name']:
-                if password == row['Password']:
-                    return
-                else:
-                    raise Exception('Password wrong')
-            else:
-                raise Exception('Name wrong')
+            if name == row[0] and password == row[1]:
+                print(f'Hello {name}')
+                return True
+        raise Exception('Password or name wrong!')
+
 
 def transaction(name, operation):
     file = f'{name}_transaction.json'
@@ -170,53 +169,75 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
 def atm(need_money):
     with open("atm.json", "r+") as file:
         data = json.load(file)
-        a = 0
-        while True:
-            if need_money >= 1000 and data['1000hr'] > 0:
+        nom = [1000, 500, 200, 100, 50, 20]
+        flag = True
+        while flag:
+            flag = False
+            if need_money // 1000 > 0 and data['1000hr'] != 0 and \
+                    (need_money - 1000 == 0 or [i for i in nom if (need_money - 1000) // i > 0]):
                 data['1000hr'] -= 1
-                print('1000 hr')
-                a = a + 1000
-                need_money = need_money - 1000
-                continue
-            elif need_money >= 500 < 1000 and data['500hr'] > 0:
+                print('1000hr')
+                need_money -= 1000
+                if need_money == 0:
+                    break
+                else:
+                    flag = True
+            if need_money // 500 > 0 and data['500hr'] != 0 and \
+                    (need_money - 500 == 0 or [i for i in nom if (need_money - 500) // i > 0]):
                 data['500hr'] -= 1
                 print('500hr')
-                a = a + 500
-                need_money = need_money - 500
-                continue
-            elif need_money >= 200 < 500 and data['200hr'] > 0:
+                need_money -= 500
+                if need_money == 0:
+                    flag = False
+                    break
+                else:
+                    flag = True
+            if need_money // 200 > 0 and data['200hr'] != 0 and \
+                    (need_money - 200 == 0 or [i for i in nom if (need_money - 200) // i > 0]):
                 data['200hr'] -= 1
-                print('200 hr')
-                a = a + 200
-                need_money = need_money - 200
-                continue
-            elif need_money >= 100 < 200 and data['100hr'] > 0:
+                print('200hr')
+                need_money -= 200
+                if need_money == 0:
+                    flag = False
+                    break
+                else:
+                    flag = True
+            if need_money // 100 > 0 and data['100hr'] != 0 and \
+                    (need_money - 100 == 0 or [i for i in nom if (need_money - 100) // i > 0]):
                 data['100hr'] -= 1
-                print('100 hr')
-                a = a + 100
-                need_money = need_money - 100
-                continue
-            elif need_money >= 50 < 100 and data['50hr'] > 0:
+                print('100hr')
+                need_money -= 100
+                if need_money == 0:
+                    flag = False
+                    break
+                else:
+                    flag = True
+            if need_money // 50 > 0 and data['50hr'] != 0 and \
+                    (need_money - 50 == 0 or [i for i in nom if (need_money - 50) // i > 0]):
                 data['50hr'] -= 1
-                print('50 hr')
-                a = a + 50
-                need_money = need_money - 50
-                continue
-            elif need_money >= 20 < 50 and data['20hr'] > 0:
+                print('50hr')
+                need_money -= 50
+                if need_money == 0:
+                    flag = False
+                    break
+                else:
+                    flag = True
+            if need_money // 20 > 0 and data['20hr'] != 0 and \
+                    (need_money - 20 == 0 or [i for i in nom if (need_money - 20) // i > 0]):
                 data['20hr'] -= 1
-                print('20 hr')
-                a = a + 20
-                need_money = need_money - 20
-                continue
-            elif need_money == 0:
-                print(data)
+                print('20hr')
+                need_money -= 20
+                if need_money == 0:
+                    flag = False
+                    break
+                else:
+                    flag = True
+            if need_money == 0:
+                with open("atm.json", 'w') as outfile:
+                    json.dump(data, outfile)
+            elif need_money != 0:
+                print('Come up with another amount')
                 break
-            else:
-                print(f'Try another amount! You can have {a}hr')
-                break
-
-    with open("atm.json", 'w') as outfile:
-        json.dump(data, outfile)
 
 
 start()
