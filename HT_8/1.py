@@ -73,7 +73,8 @@ def security_guard():
             with open('atm.json') as security:
                 data = json.load(security)
                 if res == 2:
-                    component_1000hr = input('How many bills do you want to put in the 1000 hryvnias compartment? Put: ')
+                    component_1000hr = input(
+                        'How many bills do you want to put in the 1000 hryvnias compartment? Put: ')
                     data["1000hr"] += int(component_1000hr)
                     component_500hr = input('How many bills do you want to put in the 500 hryvnias compartment? Put: ')
                     data["500hr"] += int(component_500hr)
@@ -86,7 +87,7 @@ def security_guard():
                     component_20hr = input('How many bills do you want to put in the 20 hryvnias compartment? Put: ')
                     data["20hr"] += int(component_20hr)
                     component_10hr = input('How many bills do you want to put in the 10 hryvnias compartment? Put: ')
-                    data["10hr"] += int(component_20hr)
+                    data["10hr"] += int(component_10hr)
                     print(data)
 
                     with open("atm.json", 'w') as outfile:
@@ -171,7 +172,7 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
 def atm(need_money):
     with open("atm.json", "r+") as file:
         data = json.load(file)
-        nom = [1000, 500, 200, 100, 50, 20, 10]
+        nom = [1000, 500, 200, 100, 50, 20]
         flag = True
         while flag:
             flag = False
@@ -217,6 +218,8 @@ def atm(need_money):
                 print('50hr')
                 need_money -= 50
                 if need_money == 0:
+                    with open("atm.json", 'w') as outfile:
+                        json.dump(data, outfile)
                     return True
                 else:
                     flag = True
@@ -226,6 +229,8 @@ def atm(need_money):
                 print('20hr')
                 need_money -= 20
                 if need_money == 0:
+                    with open("atm.json", 'w') as outfile:
+                        json.dump(data, outfile)
                     return True
                 else:
                     flag = True
