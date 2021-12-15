@@ -75,19 +75,19 @@ def security_guard():
                 if res == 2:
                     component_1000hr = input(
                         'How many bills do you want to put in the 1000 hryvnias compartment? Put: ')
-                    data["1000hr"] += int(component_1000hr)
+                    data["1000"] += int(component_1000hr)
                     component_500hr = input('How many bills do you want to put in the 500 hryvnias compartment? Put: ')
-                    data["500hr"] += int(component_500hr)
+                    data["500"] += int(component_500hr)
                     component_200hr = input('How many bills do you want to put in the 200 hryvnias compartment? Put: ')
-                    data["200hr"] += int(component_200hr)
+                    data["200"] += int(component_200hr)
                     component_100hr = input('How many bills do you want to put in the 100 hryvnias compartment? Put: ')
-                    data["100hr"] += int(component_100hr)
+                    data["100"] += int(component_100hr)
                     component_50hr = input('How many bills do you want to put in the 50 hryvnias compartment? Put: ')
-                    data["50hr"] += int(component_50hr)
+                    data["50"] += int(component_50hr)
                     component_20hr = input('How many bills do you want to put in the 20 hryvnias compartment? Put: ')
-                    data["20hr"] += int(component_20hr)
+                    data["20"] += int(component_20hr)
                     component_10hr = input('How many bills do you want to put in the 10 hryvnias compartment? Put: ')
-                    data["10hr"] += int(component_10hr)
+                    data["10"] += int(component_10hr)
                     print(data)
 
                     with open("atm.json", 'w') as outfile:
@@ -170,51 +170,51 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
 
 
 def atm(need_money):
-    with open("atm.json", "r+") as file:
+    with open("atm.json", "r") as file:
         data = json.load(file)
-        nom = [1000, 500, 200, 100, 50, 20]
+        nom = [int(i) for i in data.keys() if data[i] != 0]
         flag = True
         while flag:
             flag = False
-            if need_money // 1000 > 0 and data['1000hr'] != 0 and \
+            if need_money // 1000 > 0 and data['1000'] != 0 and \
                     (need_money - 1000 == 0 or [i for i in nom if (need_money - 1000) // i > 0]):
-                data['1000hr'] -= 1
+                data['1000'] -= 1
                 print('1000hr')
                 need_money -= 1000
                 if need_money == 0:
                     return True
                 else:
                     flag = True
-            if need_money // 500 > 0 and data['500hr'] != 0 and \
+            if need_money // 500 > 0 and data['500'] != 0 and \
                     (need_money - 500 == 0 or [i for i in nom if (need_money - 500) // i > 0]):
-                data['500hr'] -= 1
+                data['500'] -= 1
                 print('500hr')
                 need_money -= 500
                 if need_money == 0:
                     return True
                 else:
                     flag = True
-            if need_money // 200 > 0 and data['200hr'] != 0 and \
+            if need_money // 200 > 0 and data['200'] != 0 and \
                     (need_money - 200 == 0 or [i for i in nom if (need_money - 200) // i > 0]):
-                data['200hr'] -= 1
+                data['200'] -= 1
                 print('200hr')
                 need_money -= 200
                 if need_money == 0:
                     return True
                 else:
                     flag = True
-            if need_money // 100 > 0 and data['100hr'] != 0 and \
+            if need_money // 100 > 0 and data['100'] != 0 and \
                     (need_money - 100 == 0 or [i for i in nom if (need_money - 100) // i > 0]):
-                data['100hr'] -= 1
+                data['100'] -= 1
                 print('100hr')
                 need_money -= 100
                 if need_money == 0:
                     return True
                 else:
                     flag = True
-            if need_money // 50 > 0 and data['50hr'] != 0 and \
+            if need_money // 50 > 0 and data['50'] != 0 and \
                     (need_money - 50 == 0 or [i for i in nom if (need_money - 50) // i > 0]):
-                data['50hr'] -= 1
+                data['50'] -= 1
                 print('50hr')
                 need_money -= 50
                 if need_money == 0:
@@ -223,9 +223,9 @@ def atm(need_money):
                     return True
                 else:
                     flag = True
-            if need_money // 20 > 0 and data['20hr'] != 0 and \
+            if need_money // 20 > 0 and data['20'] != 0 and \
                     (need_money - 20 == 0 or [i for i in nom if (need_money - 20) // i > 0]):
-                data['20hr'] -= 1
+                data['20'] -= 1
                 print('20hr')
                 need_money -= 20
                 if need_money == 0:
@@ -234,9 +234,9 @@ def atm(need_money):
                     return True
                 else:
                     flag = True
-            if need_money // 10 > 0 and data['10hr'] != 0 and \
+            if need_money // 10 > 0 and data['10'] != 0 and \
                     (need_money - 10 == 0 or [i for i in nom if (need_money - 10) // i > 0]):
-                data['10hr'] -= 1
+                data['10'] -= 1
                 print('10hr')
                 need_money -= 10
                 if need_money == 0:
