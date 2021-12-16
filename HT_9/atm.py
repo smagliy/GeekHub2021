@@ -104,71 +104,84 @@ def atm(money_needed):
     db.commit()
     nom = [int(i[0]) for i in res if i[1] != 0]
     flag = True
+    hr1000 = 0
+    hr500 = 0
+    hr200 = 0
+    hr100 = 0
+    hr50 = 0
+    hr20 = 0
     while flag:
         flag = False
         if money_needed // 1000 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("1000",)).fetchone()[0] != 0 and \
                 (money_needed - 1000 == 0 or [i for i in nom if (money_needed - 1000) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "1000"))
-            db.commit()
+            hr1000 += 1
             print('1000hr')
             money_needed -= 1000
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         if money_needed // 500 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("500",)).fetchone()[0] != 0 and \
                 (money_needed - 500 == 0 or [i for i in nom if (money_needed - 500) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "500"))
-            db.commit()
+            hr500 += 1
             print('500hr')
             money_needed -= 500
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         if money_needed // 200 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("200",)).fetchone()[0] != 0 and \
                 (money_needed - 200 == 0 or [i for i in nom if (money_needed - 200) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "200"))
-            db.commit()
+            hr200 += 1
             print('200hr')
             money_needed -= 200
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         if money_needed // 100 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("100",)).fetchone()[0] != 0 and \
                 (money_needed - 100 == 0 or [i for i in nom if (money_needed - 100) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "100"))
-            db.commit()
+            hr100 += 1
             print('100hr')
             money_needed -= 100
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         if money_needed // 50 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("50",)).fetchone()[0] != 0 and \
                 (money_needed - 50 == 0 or [i for i in nom if (money_needed - 50) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "50"))
-            db.commit()
+            hr50 += 1
             print('50hr')
             money_needed -= 50
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         if money_needed // 20 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("20",)).fetchone()[0] != 0 and \
                 (money_needed - 20 == 0 or [i for i in nom if (money_needed - 20) // i > 0]):
-            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (1, "20"))
-            db.commit()
+            hr20 += 1
             print('20hr')
             money_needed -= 20
             if money_needed == 0:
-                return True
+                break
             else:
                 flag = True
         else:
             print('It is impossible to withdraw such a sum from an ATM!')
             return False
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr20, "20"))
+    db.commit()
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr50, "50"))
+    db.commit()
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr100, "100"))
+    db.commit()
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr200, "200"))
+    db.commit()
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr500, "500"))
+    db.commit()
+    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr1000, "1000"))
+    db.commit()
+    return True
 
 
 start()
