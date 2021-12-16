@@ -170,7 +170,7 @@ def add_and_get_balance(name, sum_on=0, sum_off=0):
 
 
 def atm(need_money):
-    with open("atm.json", "r") as file:
+    with open("atm.json", "r+") as file:
         data = json.load(file)
         nom = [int(i) for i in data.keys() if data[i] != 0]
         flag = True
