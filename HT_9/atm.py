@@ -78,22 +78,22 @@ def security_guard():
             print(res)
         elif command == 2:
             add_1000hr = int(input('How much you want to put in 1000hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_1000hr, "1000hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_1000hr, "1000"))
             db.commit()
             add_500hr = int(input('How much you want to put in 500hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_500hr, "500hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_500hr, "500"))
             db.commit()
             add_200hr = int(input('How much you want to put in 200hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_200hr, "200hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_200hr, "200"))
             db.commit()
             add_100hr = int(input('How much you want to put in 100hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_100hr, "100hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_100hr, "100"))
             db.commit()
             add_50hr = int(input('How much you want to put in 50hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_50hr, "50hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_50hr, "50"))
             db.commit()
             add_20hr = int(input('How much you want to put in 20hr: '))
-            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_20hr, "20hr"))
+            cur.execute("UPDATE nominals SET number=number+? WHERE nominals=?", (add_20hr, "20"))
             db.commit()
         else:
             break
@@ -113,7 +113,7 @@ def atm(money_needed):
             print('1000hr')
             money_needed -= 1000
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         if money_needed // 500 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("500",)).fetchone()[0] != 0 and \
@@ -123,7 +123,7 @@ def atm(money_needed):
             print('500hr')
             money_needed -= 500
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         if money_needed // 200 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("200",)).fetchone()[0] != 0 and \
@@ -133,7 +133,7 @@ def atm(money_needed):
             print('200hr')
             money_needed -= 200
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         if money_needed // 100 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("100",)).fetchone()[0] != 0 and \
@@ -143,7 +143,7 @@ def atm(money_needed):
             print('100hr')
             money_needed -= 100
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         if money_needed // 50 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("50",)).fetchone()[0] != 0 and \
@@ -153,7 +153,7 @@ def atm(money_needed):
             print('50hr')
             money_needed -= 50
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         if money_needed // 20 > 0 and cur.execute("SELECT number FROM nominals WHERE nominals=?", ("20",)).fetchone()[0] != 0 and \
@@ -163,7 +163,7 @@ def atm(money_needed):
             print('20hr')
             money_needed -= 20
             if money_needed == 0:
-                break
+                return True
             else:
                 flag = True
         else:
