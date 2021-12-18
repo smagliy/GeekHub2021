@@ -1,6 +1,8 @@
-# Перепишіть програму-банкомат на використання бази даних для збереження всих даних.
-# Використовувати БД sqlite3 та натівний Python.
+# Доповніть програму-банкомат наступним функціоналом:
+#    - новий пункт меню, який буде виводити поточний курс валют (API Приватбанк)
 import sqlite3
+import requests
+import json
 db = sqlite3.connect('bank.db')
 cur = db.cursor()
 
@@ -40,7 +42,8 @@ def menu(login_1):
             1 - Check your balance,
             2 - Replenish the balance
             3 - Withdraw money from account
-            4 - Exit
+            4 - Currency
+            5 - Exit
         """)
         command = int(input('Write your command: '))
         if command == 1:
@@ -60,9 +63,25 @@ def menu(login_1):
                         cur.execute("UPDATE users SET balance=balance-? WHERE username=?", (amount_off, login_1))
                         db.commit()
                         break
+        elif command == 4:
+            currency()
         else:
             print('Thank you for your answer. Have a good day!')
             break
+
+
+def currency():
+    response = requests.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
+    with open('api.json', 'w') as f:
+        f.write(response.text)
+    with open('api.json', 'rb') as read:
+        data = json.load(read)
+        for i in data:
+            curr = i['ccy']
+            base_curr = i['base_ccy']
+            buy = i['buy']
+            sale = i['sale']
+            print(f'{curr} sale: {sale} {base_curr}, buy: {buy} {base_curr}')
 
 
 def security_guard():
