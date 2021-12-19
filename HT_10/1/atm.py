@@ -28,7 +28,11 @@ def start():
             else:
                 raise Exception('Login or password wrong!')
     elif command == 2:
-        cur.execute(f"INSERT INTO users VALUES (f'{login}', f'{password}', 0)")
+        cur.execute(f"INSERT INTO users (username, password, balance) VALUES (?, ?, 0)", (login, password))
+        db.commit()
+        file_name1 = f'{login}_transaction.json'
+        with open(file_name1, 'w') as new_file:
+            json.dump({"Name": f"{login}", "Operation": []}, new_file)
         print(f'Welcome {login}')
 
 
@@ -36,7 +40,19 @@ def get_balance(login):
     return cur.execute("SELECT balance FROM users WHERE username=?", (login,)).fetchone()[0]
 
 
+def transaction(name, operation):
+    file = f'{name}_transaction.json'
+    new_operation = {"operation": operation}
+    with open(file) as operation:
+        data = json.load(operation)
+        data["Operation"].append(new_operation)
+
+    with open(file, 'w') as outfile:
+        json.dump(data, outfile)
+
+
 def menu(login_1):
+    dict_operation = {1: 'Check your balance', 2: 'Replenish the balance', 3: 'Withdraw money from account'}
     while True:
         print("""
             1 - Check your balance,
@@ -47,9 +63,11 @@ def menu(login_1):
         """)
         command = int(input('Write your command: '))
         if command == 1:
+            transaction(login_1, dict_operation[command])
             print(f'You have {get_balance(login_1)} hr in your account')
         elif command == 2:
             amount_on = int(input('Write the amount you want to add: '))
+            transaction(login_1, dict_operation[command])
             if amount_on > 0:
                 cur.execute("UPDATE users SET balance=balance+? WHERE username=?", (amount_on, login_1))
                 db.commit()
@@ -57,11 +75,12 @@ def menu(login_1):
             amount_off = int(input('Write the amount you want withdraw: '))
             if amount_off > 0:
                 if get_balance(login_1) - amount_off < 0:
-                    raise Exception('')
+                    raise Exception('Some exception')
                 else:
                     while atm(amount_off):
                         cur.execute("UPDATE users SET balance=balance-? WHERE username=?", (amount_off, login_1))
                         db.commit()
+                        transaction(login_1, dict_operation[command])
                         break
         elif command == 4:
             currency()
@@ -136,7 +155,9 @@ def atm(money_needed):
             hr1000 += 1
             print('1000hr')
             money_needed -= 1000
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr1000, "1000"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
@@ -145,7 +166,9 @@ def atm(money_needed):
             hr500 += 1
             print('500hr')
             money_needed -= 500
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr500, "500"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
@@ -154,7 +177,9 @@ def atm(money_needed):
             hr200 += 1
             print('200hr')
             money_needed -= 200
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr200, "200"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
@@ -163,7 +188,9 @@ def atm(money_needed):
             hr100 += 1
             print('100hr')
             money_needed -= 100
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr100, "100"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
@@ -172,7 +199,9 @@ def atm(money_needed):
             hr50 += 1
             print('50hr')
             money_needed -= 50
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr50, "50"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
@@ -181,25 +210,15 @@ def atm(money_needed):
             hr20 += 1
             print('20hr')
             money_needed -= 20
+            cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr20, "20"))
             if money_needed == 0:
+                db.commit()
                 break
             else:
                 flag = True
         else:
             print('It is impossible to withdraw such a sum from an ATM!')
             return False
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr20, "20"))
-    db.commit()
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr50, "50"))
-    db.commit()
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr100, "100"))
-    db.commit()
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr200, "200"))
-    db.commit()
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr500, "500"))
-    db.commit()
-    cur.execute("UPDATE nominals SET number=number-? WHERE nominals=?", (hr1000, "1000"))
-    db.commit()
     return True
 
 

@@ -5,7 +5,7 @@ import requests
 import json
 
 
-def converter_currency_on_uah(name_1, name_2, summa):
+def converter_currency_on_uah(name_1, summa):
     response = requests.get('https://api.privatbank.ua/p24api/pubinfo?exchange&json&coursid=11')
     with open('api_privat.json', 'w') as f:
         f.write(response.text)
@@ -26,24 +26,28 @@ def converter_currency_on_uah(name_1, name_2, summa):
 
 def convereter_on():
     print("""USD, EUR, RUR, BTC""")
+    list_curr = ['USD', 'EUR', 'RUR', 'BTC', 'UAH']
     name1 = input('Write your currency of your sum: ')
     name2 = input('Write currency to which you want to convert: ')
     currency = int(input('Write your sum: '))
-    list_res_fun = converter_currency_on_uah(name1, name2, currency)
-    if list_res_fun == [None]:
-        raise Exception('Some exceptions')
-    else:
-        if name2 == list_res_fun[1]:
-            converter_currency_on_uah(name1, name2, currency)
-            return
+    if name2 in list_curr and name1 in list_curr:
+        list_res_fun = converter_currency_on_uah(name1, currency)
+        if list_res_fun == [None]:
+            raise Exception('Some exceptions')
         else:
-            with open('api_privat.json', 'rb') as read:
-                data = json.load(read)
-                for i in data:
-                    if i['ccy'] == name2:
-                        res = list_res_fun[0] / float(i['buy'])
-                        print(f'Summa in {name2}: {res}')
-                        break
+            if name2 == list_res_fun[1]:
+                converter_currency_on_uah(name1, currency)
+                return
+            else:
+                with open('api_privat.json', 'rb') as read:
+                    data = json.load(read)
+                    for i in data:
+                        if i['ccy'] == name2:
+                            res = list_res_fun[0] / float(i['buy'])
+                            print(f'Summa in {name2}: {res}')
+                            break
+    else:
+        print('Currency isn`t correct!')
 
 
 convereter_on()
