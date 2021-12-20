@@ -25,8 +25,8 @@ def converter_currency_on_uah(name_1, summa):
 
 
 def convereter_on():
-    print("""USD, EUR, RUR, BTC""")
-    list_curr = ['USD', 'EUR', 'RUR', 'BTC', 'UAH']
+    print("""USD, EUR, RUR""")
+    list_curr = ['USD', 'EUR', 'RUR', 'UAH']
     name1 = input('Write your currency of your sum: ')
     name2 = input('Write currency to which you want to convert: ')
     currency = int(input('Write your sum: '))
@@ -46,11 +46,6 @@ def convereter_on():
                             res = list_res_fun[0] / float(i['buy'])
                             print(f'Summa in {name2}: {res}')
                             break
-                        if i['ccy'] == name2 and name2 == 'BTC':
-                            if name1 == 'USD':
-                                res = currency / float(i['buy'])
-                                print(f'Summa in {name2}: {res}')
-                                break
     else:
         print('Currency isn`t correct!')
 
