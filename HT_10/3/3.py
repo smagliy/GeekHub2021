@@ -25,7 +25,7 @@ def converter_currency_on_uah(name_1, summa):
 
 
 def convereter_on():
-    print("""USD, EUR, RUR""")
+    print("""USD, EUR, RUR, UAH""")
     list_curr = ['USD', 'EUR', 'RUR', 'UAH']
     name1 = input('Write your currency of your sum: ')
     name2 = input('Write currency to which you want to convert: ')
