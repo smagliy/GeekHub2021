@@ -42,10 +42,15 @@ def convereter_on():
                 with open('api_privat.json', 'rb') as read:
                     data = json.load(read)
                     for i in data:
-                        if i['ccy'] == name2:
+                        if i['ccy'] == name2 and name2 != 'BTC':
                             res = list_res_fun[0] / float(i['buy'])
                             print(f'Summa in {name2}: {res}')
                             break
+                        if i['ccy'] == name2 and name2 == 'BTC':
+                            if name1 == 'USD':
+                                res = currency / float(i['buy'])
+                                print(f'Summa in {name2}: {res}')
+                                break
     else:
         print('Currency isn`t correct!')
 
