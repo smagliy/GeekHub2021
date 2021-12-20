@@ -28,10 +28,10 @@ def start():
             else:
                 raise Exception('Login or password wrong!')
     elif command == 2:
-        cur.execute(f"INSERT INTO users (username, password, balance) VALUES (?, ?, 0)", (login, password))
+        cur.execute("INSERT INTO users (username, password, balance) VALUES (?, ?, ?)", (login, password, 0))
         db.commit()
-        list_transaction_user = []
-        cur.execute(f"INSERT INTO transactions VALUES (?, ?)", ('user3', json.dumps(list_transaction_user)))
+        cur.execute("INSERT INTO transactions (name, operation) VALUES (?, ?)", (login, str()))
+        db.commit()
         print(f'Welcome {login}')
 
 
@@ -41,7 +41,7 @@ def get_balance(login):
 
 def transaction(name, operation):
     list_user = cur.execute("SELECT operation FROM transactions WHERE name=?", (name,)).fetchone()[0]
-    list_user = list_user + ', ' + operation
+    list_user = list_user + ' ' + operation
     cur.execute(f"UPDATE transactions SET operation=? WHERE name=?", (list_user, name))
     db.commit()
 
