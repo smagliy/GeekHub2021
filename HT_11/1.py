@@ -14,11 +14,11 @@ import requests
 import json
 import random
 
-print("1 - full information, 2 - posts, 3 - TO DO, 4 - random url, 5 - exit")
+print("1 - full information, 2 - posts, 3 - comments post  4 - TO DO, 5 - random url, 6 - exit")
 
 
 def menu():
-    id_us = int(input("Write id which you want to choose in users' tables: "))
+    id_us = int(input("Write id which you want to choose: "))
     while True:
         command = int(input('Write your command: '))
         if command == 1:
@@ -26,8 +26,12 @@ def menu():
         elif command == 2:
             posts(id_us)
         elif command == 3:
-            to_do(id_us)
+            comments_full(id_us)
         elif command == 4:
+            print('If you want to see didn`t completed tasks - 1\nComplete tasks- 2')
+            stat = int(input('Write your number choose:'))
+            to_do(id_us, stat)
+        elif command == 5:
             random_url()
         else:
             break
@@ -42,37 +46,37 @@ def info(id_user):
         for i in data:
             if i['id'] == id_user:
                 print(f"""ID :{id_user}\nName: {i['name']}\nUsername: {i['username']}\nEmail: {i['email']}\nAddress: {i['address']}\nPhone: {i['phone']}\nWebsite: {i['website']}\nCompany: {i['company']}""")
-            break
 
 
 def posts(id_post):
     response = requests.get('https://jsonplaceholder.typicode.com/posts')
-    with open('post_comment.json', 'w') as user:
+    with open('post.json', 'w') as user:
         user.write(response.text)
-    with open('post_comment.json', 'rb') as read:
+    with open('post.json', 'rb') as read:
         data = json.load(read)
         for i in data:
             if i['id'] == id_post:
                 title = i['title']
                 body = i['body']
                 print(f"ID: {id_post} \nTitle: {title} \nBody: {body}")
-                break
-    response2 = requests.get('https://jsonplaceholder.typicode.com/comments')
-    with open('post.json', 'w') as user:
-        user.write(response2.text)
-    with open('post.json', 'rb') as read:
-        data = json.load(read)
-        id = 0
+
+
+def comments_full(id_comment):
+    response = requests.get('https://jsonplaceholder.typicode.com/comments')
+    with open('post_comment.json', 'w') as f:
+        f.write(response.text)
+    with open('post_comment.json', 'rb') as f:
+        data = json.load(f)
+        comment = 0
         for i in data:
-            if i['postId'] == id_post:
-                id += 1
-                name = i['name']
-                id_comments = i['id']
-                print(f"Name: {name} \nID comments: {id_comments}")
-        print(f"Sum of id: {id}")
+            if i['postId'] == id_comment:
+                comment += 1
+                print('----------------------')
+                print(f"Name: {i['name']} \nComment: {i['body']}")
+        print(f"Sum of comments is {comment}")
 
 
-def to_do(id_user):
+def to_do(id_user, status):
     response = requests.get('https://jsonplaceholder.typicode.com/todos')
     with open('to_do.json', 'w') as f:
         f.write(response.text)
@@ -80,13 +84,16 @@ def to_do(id_user):
         data = json.load(f)
         for i in data:
             if i['userId'] == id_user:
-                title = i['title']
-                if i['completed'] == False:
-                    print("Doesn't complete tasks:")
-                    print(f"Title:{title}")
-                elif i['completed'] == True:
-                    print("Complete tasks:")
-                    print(f"Title: {title}")
+                if status == 1:
+                    title = i['title']
+                    if i['completed'] == False:
+                        print('----------------------')
+                        print(f"Title:{title}")
+                elif status == 2:
+                    title = i['title']
+                    if i['completed'] == True:
+                        print('----------------------')
+                        print(f"Title: {title}")
 
 
 def random_url():
