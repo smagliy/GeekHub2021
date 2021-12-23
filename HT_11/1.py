@@ -24,9 +24,7 @@ def menu():
         if command == 1:
             info(id_us)
         elif command == 2:
-            print('1 - some information, 2 - full information')
-            stat = int(input('Write your number choose:'))
-            posts(id_us, stat)
+            posts(id_us)
         elif command == 3:
             comments_full(id_us)
         elif command == 4:
@@ -50,20 +48,18 @@ def info(id_user):
                 print(f"""ID :{id_user}\nName: {i['name']}\nUsername: {i['username']}\nEmail: {i['email']}\nAddress: {i['address']}\nPhone: {i['phone']}\nWebsite: {i['website']}\nCompany: {i['company']}""")
 
 
-def posts(id_post, status):
+def posts(id_post):
     response = requests.get('https://jsonplaceholder.typicode.com/posts')
     with open('post.json', 'w') as user:
         user.write(response.text)
     with open('post.json', 'rb') as read:
         data = json.load(read)
         for i in data:
-            if i['id'] == id_post:
+            if i['userId'] == id_post:
                 title = i['title']
                 body = i['body']
-                if status == 1:
-                    print(f"ID: {id_post} \nTitle: {title} \n")
-                else:
-                    print(f"D: {id_post} \nTitle: {title} \nBody: {body}")
+                print(f"ID: {id_post} \nTitle: {title} \nBody: {body}")
+                print('----------------------------')
 
 
 def comments_full(id_comment):
