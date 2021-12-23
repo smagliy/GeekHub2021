@@ -14,7 +14,7 @@ import requests
 import json
 import random
 
-print("1 - full information, 2 - posts, 3 - comments post  4 - TO DO, 5 - random url, 6 - exit")
+print("1 - full information, 2 - posts, 3 - TO DO, 4 - random url, 5 - exit")
 
 
 def menu():
@@ -26,12 +26,10 @@ def menu():
         elif command == 2:
             posts(id_us)
         elif command == 3:
-            comments_full(id_us)
-        elif command == 4:
             print('If you want to see didn`t completed tasks - 1\nComplete tasks- 2')
             stat = int(input('Write your number choose:'))
             to_do(id_us, stat)
-        elif command == 5:
+        elif command == 4:
             random_url()
         else:
             break
@@ -58,8 +56,11 @@ def posts(id_post):
             if i['userId'] == id_post:
                 title = i['title']
                 body = i['body']
-                print(f"ID: {id_post} \nTitle: {title} \nBody: {body}")
+                print(f"ID: {i['id']} \nTitle: {title} \nBody: {body}")
                 print('----------------------------')
+
+        comment = int(input('Write id post: '))
+        comments_full(comment)
 
 
 def comments_full(id_comment):
