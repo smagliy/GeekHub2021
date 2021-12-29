@@ -18,7 +18,6 @@ db.commit()
 def link_text():
     page_cons = 'http://quotes.toscrape.com'
     page = page_cons
-    list_all_links = list()
     while True:
         try:
             page_response = requests.get(page)
@@ -42,41 +41,32 @@ def link_text():
                             (element_content['author'], element_content['text_author'], json.dumps(element_content['tags']), element_content['page']))
                 db.commit()
                 list_elements_link.append(element_content['link_author'])
-            list_all_links.append(list_elements_link)
+            list_links = list(set(list_elements_link))
             start = site.select_one('.pager .next a').get('href')
             page = page_cons + start
         except Exception:
             break
-    return list_all_links
+        return list_links
 
-link_text()
 
 def link_authors():
-    list_all_authors = list()
-    list_href_authors = list()
-    for el in link_text():
-        for el_1 in el:
-            href = el_1
-            list_href_authors.append(href)
-    list_href_authors_new = list(set(list_href_authors))
-    for link in list_href_authors_new:
+    for link in link_text():
         page_response = requests.get(link)
         site = BeautifulSoup(page_response.text, 'lxml')
         element_list = site.select('.author-details')
-        list_elements_authors = list()
         for i in element_list:
             element_author = {
-                'author': i.select_one('.author-title').get_text().replace("\n", ''),
-                'date_birth': i.select_one('.author-born-date').get_text(),
-                'place_birth': i.select_one('.author-born-location').get_text(),
-                'details': i.select_one('.author-description').get_text().replace("\n", '')
-            }
+                    'author': i.select_one('.author-title').get_text().replace("\n", ''),
+                    'date_birth': i.select_one('.author-born-date').get_text(),
+                    'place_birth': i.select_one('.author-born-location').get_text(),
+                    'details': i.select_one('.author-description').get_text().replace("\n", '')
+                }
             fields_2 = ['Author', 'Date birth', 'Location birth', 'Details']
             with open('authors_info.csv', 'a', encoding='utf-8') as file:
                 write = csv.DictWriter(file, fieldnames=fields_2)
                 write.writerow(
                     {'Author': element_author['author'], 'Date birth': element_author['date_birth'], 'Location birth': element_author['place_birth'],
-                     'Details': element_author['details']})
+                        'Details': element_author['details']})
             cur.execute("INSERT INTO authors (author, date_birth, location_birth, details) VALUES (?, ?, ?, ?)",
                         (element_author['author'], element_author['date_birth'], element_author['place_birth'], element_author['details']))
             db.commit()
