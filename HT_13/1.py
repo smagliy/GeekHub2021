@@ -4,22 +4,32 @@
 #    - Якщо використати один з методів - last_result повенен повернути результат виконання попереднього методу.
 #    - Додати документування в клас (можете почитати цю статтю: https://realpython.com/documenting-python-code/ )
 class Calc(object):
+    """Summary of class here.
+    Class does math operations with 2 arguments and return last_result
+    """
     last_result = None
 
     def sum(self, number_a, number_b):
+        """Performs operation sum"""
         self.last_result = number_b + number_a
         return self.last_result
 
     def difference(self, number_a, number_b):
+        """Performs operation difference"""
         self.last_result = number_b - number_a
         return self.last_result
 
     def multiplication(self, number_a, number_b):
+        """Performs operation multiplication"""
         self.last_result = number_b * number_a
         return self.last_result
 
     def divide(self, number_a, number_b):
-        self.last_result = number_b / number_a
+        """Performs operation divide"""
+        if number_a != 0:
+            self.last_result = number_b / number_a
+        else:
+            print('Can’t divide by zero!!!')
         return self.last_result
 
 
