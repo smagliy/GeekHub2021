@@ -4,17 +4,20 @@ class Figure(object):
     def __init__(self, color):
         self.color = color
 
-    class Oval(object):
-        def __init__(self, r1, r2, color):
-            self.r1 = r1
-            self.r2 = r2
-            self.color = Figure(color)
 
-    class Square(object):
-        def __init__(self, a, color):
-            self.a = a
-            self.color = Figure(color)
+class Oval(Figure):
+    def __init__(self, r1, r2, color):
+        super(Oval, self).__init__(color)
+        self.r1 = r1
+        self.r2 = r2
+
+
+class Square(Figure):
+    def __init__(self, a, color):
+        super(Square, self).__init__(color)
+        self.a = a
 
 
 figure_1 = Figure('white')
-figure_1.Oval(1, 2, Figure('blue'))
+figure_2 = Oval(10, 2, 'blue')
+print(figure_2.color)
