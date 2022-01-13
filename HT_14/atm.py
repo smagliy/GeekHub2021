@@ -6,16 +6,49 @@ db = sqlite3.connect('DataBase.db')
 cur = db.cursor()
 
 
+class DataBase(object):
+    def looking_for_user(self, name, password):
+        return cur.execute("SELECT * FROM users WHERE name=? AND password=? AND admin=?",
+                           (name, password, 0)).fetchone()
+
+    def looking_for_superuser(self, name, password):
+        return cur.execute("SELECT * FROM users WHERE name=? AND password=? AND admin=?",
+                           (name, password, 1)).fetchone()
+
+    def new_user(self, name, password):
+        cur.execute("INSERT INTO users (name, password, balance) VALUES (?, ?, ?)", (name, password, 0))
+        db.commit()
+        cur.execute("INSERT INTO transactions (name, operation) VALUES (?, ?)", (name, ''))
+        db.commit()
+
+    def transactions(self, operation, name):
+        operations = cur.execute("SELECT operation FROM transactions WHERE name=?", (name,)).fetchone()[0]
+        operations = operations + ' ' + operation
+        cur.execute(f"UPDATE transactions SET operation=? WHERE name=?", (operations, name))
+        db.commit()
+
+    def balance(self, name):
+        return cur.execute("SELECT balance FROM users WHERE name=?", (name,)).fetchone()[0]
+
+    def balance_on(self, sum_money, name):
+        cur.execute("UPDATE users SET balance=balance+? WHERE name=?", (int(sum_money), name))
+        db.commit()
+
+    def balance_off(self, sum_money, name):
+        cur.execute("UPDATE users SET balance=balance-? WHERE name=?", (int(sum_money), name))
+        db.commit()
+
+
 class Autorization(object):
     def __init__(self, name, password):
         self.name = name
         self.password = password
 
     def log_into(self):
-        if self.name == 'admin' and self.password == 'admin':
+        if DataBase().looking_for_superuser(self.name, self.password):
             print(f'Hello superuser {self.name}')
             return 'Admin'
-        elif cur.execute("SELECT * FROM users WHERE name=? AND password=?", (self.name, self.password)).fetchone():
+        elif DataBase().looking_for_user(self.name, self.password):
             print(f'Hello {self.name}')
             return True
         else:
@@ -23,10 +56,7 @@ class Autorization(object):
             return False
 
     def add_new_user(self):
-        cur.execute("INSERT INTO users (name, password, balance) VALUES (?, ?, ?)", (self.name, self.password, 0))
-        db.commit()
-        cur.execute("INSERT INTO transactions (name, operation) VALUES (?, ?)", (self.name, ''))
-        db.commit()
+        DataBase().new_user(self.name, self.password)
         print(f'Welcome {self.name}')
         return True
 
@@ -35,15 +65,9 @@ class MethoudsForUsers(Autorization):
     def __init__(self, name, password):
         super(MethoudsForUsers, self).__init__(name, password)
 
-    def transactions(self, operation):
-        operations = cur.execute("SELECT operation FROM transactions WHERE name=?", (self.name,)).fetchone()[0]
-        operations = operations + ' ' + operation
-        cur.execute(f"UPDATE transactions SET operation=? WHERE name=?", (operations, self.name))
-        db.commit()
-
     def get_balance(self):
-        self.transactions('Check your balance')
-        return cur.execute("SELECT balance FROM users WHERE name=?", (self.name,)).fetchone()[0]
+        DataBase().transactions('Check your balance', self.name)
+        return DataBase().balance(self.name)
 
     def currency(self):
         response = requests.get('https://api.privatbank.ua/p24api/pubinfo?json&exchange&coursid=5')
@@ -60,9 +84,8 @@ class MethoudsForUsers(Autorization):
 
     def put_some_money(self, sum_of_money):
         if sum_of_money > 0:
-            cur.execute("UPDATE users SET balance=balance+? WHERE name=?", (int(sum_of_money), self.name))
-            db.commit()
-            self.transactions('Replenish the balance')
+            DataBase().balance_on(sum_of_money, self.name)
+            DataBase().transactions('Replenish the balance', self.name)
         else:
             print("Money can’t be negative")
 
@@ -70,9 +93,8 @@ class MethoudsForUsers(Autorization):
         if sum_of_money > 0:
             if self.get_balance() >= sum_of_money:
                 while Bank().atm(sum_of_money):
-                    cur.execute("UPDATE users SET balance=balance-? WHERE name=?", (int(sum_of_money), self.name))
-                    db.commit()
-                    self.transactions('Withdraw money from account')
+                    DataBase().balance_off(sum_of_money, self.name)
+                    DataBase().transactions('Withdraw money from account', self.name)
                     break
             else:
                 print('The sum is more how you have on your balance!')
@@ -191,6 +213,7 @@ class Bank(object):
                 db.commit()
             else:
                 break
+
 
 class Menu(object):
     def start(self):
