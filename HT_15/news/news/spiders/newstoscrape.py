@@ -1,62 +1,58 @@
-import scrapy
-import csv
 import datetime
-
 from bs4 import BeautifulSoup
+import scrapy
+from ..items import NewsItem
 
 
 class NewstoscrapeSpider(scrapy.Spider):
     name = 'newstoscrape'
     allowed_domains = ['vikka.ua']
-    start_urls = ['http://vikka.ua/']
-    data = input('Write date (2019/05/09): ')
-    fields = ['name', 'texts', 'tags', 'link']
-    with open(f'{data.replace("/", "_")}.csv', 'a+', encoding='utf-8') as f:
-        file = csv.DictWriter(f, fieldnames=fields)
-        file.writeheader()
+    start_urls = [f'http://vikka.ua/']
 
     def start_requests(self):
         try:
-            d = datetime.datetime.strptime(self.data, '%Y/%m/%d')
-            if (datetime.datetime.today()-d).days >= 0:
-                url_news = f'https://www.vikka.ua/{self.data}/'
+            date = input('Write date (2019/05/09): ')
+            d = datetime.datetime.strptime(date, '%Y/%m/%d')
+            if (datetime.datetime.today() - d).days >= 0:
+                url_news = f'https://www.vikka.ua/{date}/'
                 yield scrapy.Request(
-                        url=url_news,
-                        callback=self.parse_news_page
-                    )
+                    url=url_news,
+                    callback=self.parse_first_page
+                )
         except Exception:
             print('Data isn`t correct!')
 
-    def parse_news_page(self, response):
+    def parse_first_page(self, response):
         soup = BeautifulSoup(response.text, 'lxml')
-        for news in soup.select('li.item-cat-post'):
-            list_hrefs = [l.get('href') for l in news.select('h2.title-cat-post a')]
-            for link in list_hrefs:
-                yield scrapy.Request(
-                        url=link,
-                        callback=self.parse_post_page
-                    )
+        for l in soup.select('h2.title-cat-post a'):
+            href = self.parse_url(l.get('href'))['href']
+            yield scrapy.Request(
+                url=href,
+                callback=self.parse_posts
+            )
+        next_page = soup.select_one('a.next')
+        if next_page is not None:
+            print('No next page')
+            next_page = next_page.get('href')
+            yield scrapy.Request(
+                url=next_page,
+                callback=self.parse_first_page
+            )
 
-    def parse_post_page(self, response):
-        soup = BeautifulSoup(response.text, 'lxml')
-        post = self.parse_post(soup, response)
-        print(post)
-
-    def parse_post(self, soup_post, link):
-        list_href = [el.get('href') for el in soup_post.select('link[rel="canonical"]')]
-        list_tags = ["#"+el.text for el in soup_post.select('a.post-tag')]
-        dict_all = {
-            'name': soup_post.select_one('h1').text,
-            'texts': soup_post.select_one('div.entry-content.-margin-b').text,
-            'tags': " ".join(list_tags),
-            'link': list_href[0],
+    def parse_url(self, href):
+        dict_hrefs = {
+            'href': href
         }
-        fields = ['name', 'texts', 'tags', 'link']
-        name = self.data.replace("/", "_")
-        with open(f'{name}.csv', 'a+', encoding='utf-8') as f:
-            file = csv.DictWriter(f, fieldnames=fields)
-            file.writerow(dict_all)
-        return dict_all
+        return dict_hrefs
 
-
+    def parse_posts(self, response):
+        soup = BeautifulSoup(response.text, 'lxml')
+        items = NewsItem()
+        list_href = [el.get('href') for el in soup.select('link[rel="canonical"]')]
+        list_tags = ["#" + el.text for el in soup.select('a.post-tag')]
+        items['name_post'] = soup.select_one('h1').text
+        items['texts'] = soup.select_one('div.entry-content.-margin-b').text
+        items['tags'] = " ".join(list_tags)
+        items['link'] = list_href[0]
+        yield items
 
