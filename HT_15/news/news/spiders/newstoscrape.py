@@ -31,7 +31,7 @@ class NewstoscrapeSpider(scrapy.Spider):
             yield scrapy.Request(
                 url=href,
                 callback=self.parse_posts,
-                meta={'name_file':self.date.replace("/", "_")}
+                meta={'date': self.date.replace("/", " ")}
             )
         next_page = soup.select_one('a.next')
         if next_page is not None:
@@ -52,7 +52,7 @@ class NewstoscrapeSpider(scrapy.Spider):
         soup = BeautifulSoup(response.text, 'lxml')
         list_href = [el.get('href') for el in soup.select('link[rel="canonical"]')]
         list_tags = ["#" + el.text for el in soup.select('a.post-tag')]
-        self.items['name_file'] = response.meta['name_file']
+        self.items['date'] = response.meta['date']
         self.items['name_post'] = soup.select_one('h1').text
         self.items['texts'] = soup.select_one('div.entry-content.-margin-b').text
         self.items['tags'] = " ".join(list_tags)

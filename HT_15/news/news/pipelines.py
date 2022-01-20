@@ -13,5 +13,5 @@ class NewsPipeline:
     def store_db(self, item):
         self.cur.execute(f"CREATE TABLE IF NOT EXISTS date (name_post TEXT, texts TEXT, tags TEXT, link TEXT, date TEXT)")
         self.con.commit()
-        self.cur.execute(f"""INSERT INTO date VALUES (?, ?, ?, ?, ?)""", (item['name_post'], item['texts'], item['tags'], item['link'], item['name_file']))
+        self.cur.execute(f"""INSERT INTO date VALUES (?, ?, ?, ?, ?)""", (item['name_post'], item['texts'], item['tags'], item['link'], item['date']))
         self.con.commit()
