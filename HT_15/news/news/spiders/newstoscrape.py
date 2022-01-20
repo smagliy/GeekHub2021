@@ -31,7 +31,7 @@ class NewstoscrapeSpider(scrapy.Spider):
             yield scrapy.Request(
                 url=href,
                 callback=self.parse_posts,
-                meta={'date': self.date.replace("/", "_")}
+                meta={'date': self.date.replace("/", ".")}
             )
         next_page = soup.select_one('a.next')
         if next_page is not None:
