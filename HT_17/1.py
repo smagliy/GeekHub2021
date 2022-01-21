@@ -18,7 +18,7 @@ class DoScreenshot(object):
                        "directory_upgrade": True,
                        "safebrowsing.enabled": True}
         options = ChromeOptions().add_experimental_option("prefs", preferences)
-        self.wb = webdriver.Chrome('/home/kate/PycharmProjects/GeekHub2021/HT_17/chromedriver', options=options)
+        self.wb = webdriver.Chrome(str(Path(Path.cwd(), 'chromedriver')), options=options)
 
     def do(self):
         self.wb.get(
@@ -31,21 +31,8 @@ class DoScreenshot(object):
         button = self.wb.find_elements(By.CSS_SELECTOR,
                                        'span.appsMaterialWizButtonPaperbuttonContent.exportButtonContent')
         button[0].click()
-        button_change = self.wb.find_elements(By.CSS_SELECTOR, 'div.freebirdFormviewerViewResponseLinksContainer a')
-        href = button_change[0].get_attribute('href')
-        return href
-
-    def change(self):
-        href = self.do()
-        self.wb.get(href)
-        change = self.wb.find_elements(By.CSS_SELECTOR, "input.quantumWizTextinputPaperinputInput.exportInput")
-        change[1].clear()
-        #time.sleep(10)
-        change[1].send_keys('Kate45')
         self.wb.save_screenshot('screenshot2.png')
-        button = self.wb.find_element(By.CSS_SELECTOR, 'span.appsMaterialWizButtonPaperbuttonLabel')
-        button.click()
         self.wb.close()
 
 
-DoScreenshot().change()
+DoScreenshot().do()
