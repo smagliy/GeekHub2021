@@ -35,7 +35,6 @@ class NewstoscrapeSpider(scrapy.Spider):
             )
         next_page = soup.select_one('a.next')
         if next_page is not None:
-            print('No next page')
             next_page = next_page.get('href')
             yield scrapy.Request(
                 url=next_page,
