@@ -74,19 +74,7 @@ class API(object):
                     writer.writerow(json)
 
 
-def nothing():
-    API().newstories()
-
-
 if __name__ == '__main__':
-    fire.Fire({
-        'askstories': API.askstories,
-        'showstories': API.showstories,
-        'jobstories': API.jobstories,
-        'newstories': API.newstories,
-        None: API.newstories,
-    })
-
-    #nothing()
+        fire.Fire(API)
 
 
