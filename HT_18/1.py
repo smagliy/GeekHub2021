@@ -11,6 +11,7 @@
 import requests
 import csv
 import fire
+import sys
 
 class API(object):
     def __init__(self):
@@ -20,6 +21,7 @@ class API(object):
                           'showstories': ['by', 'descendants', 'id', 'kids', 'score', 'text', 'time', 'title', 'type', 'url'],
                           'jobstories': ['by', 'id', 'score', 'text', 'time', 'title', 'type', 'url'],
                           'newstories': ['by', 'descendants', 'id', 'kids', 'score', 'time', 'title', 'type', 'url', 'text']}
+        # self.newstories()
 
     def askstories(self):
         response = self.request.get(f'https://hacker-news.firebaseio.com/v0/askstories.json?print=pretty')
@@ -75,6 +77,18 @@ class API(object):
 
 
 if __name__ == '__main__':
-        fire.Fire(API)
+    try:
+        if sys.argv[1] == 'askstories':
+            API().askstories()
+        elif sys.argv[1] == 'showstories':
+            API().showstories()
+        elif sys.argv[1] == 'newstories':
+            API().newstories()
+        elif sys.argv[1] == 'jobstories':
+            API().jobstories()
+        else:
+            print('some problem...')
+    except Exception:
+        API().newstories()
 
 
