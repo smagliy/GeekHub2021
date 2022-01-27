@@ -10,7 +10,6 @@
 # Перевірити свій код можна з допомогою ресурсу http://pep8online.com/
 import requests
 import csv
-import fire
 import sys
 
 class API(object):
@@ -21,52 +20,13 @@ class API(object):
                           'showstories': ['by', 'descendants', 'id', 'kids', 'score', 'text', 'time', 'title', 'type', 'url'],
                           'jobstories': ['by', 'id', 'score', 'text', 'time', 'title', 'type', 'url'],
                           'newstories': ['by', 'descendants', 'id', 'kids', 'score', 'time', 'title', 'type', 'url', 'text']}
-        # self.newstories()
 
-    def askstories(self):
-        response = self.request.get(f'https://hacker-news.firebaseio.com/v0/askstories.json?print=pretty')
-        text = response.json()
-        header = self.dict_elem['askstories']
-        with open(f'askstories.csv', 'a+') as f:
-            writer = csv.DictWriter(f, fieldnames=header)
-            writer.writeheader()
-            for id in text:
-                response_id = self.request.get(f'https://hacker-news.firebaseio.com/v0/item/{id}.json?print=pretty')
-                json = response_id.json()
-                if json != None:
-                    writer.writerow(json)
 
-    def showstories(self):
-        response = self.request.get(f'https://hacker-news.firebaseio.com/v0/showstories.json?print=pretty')
+    def process(self, name):
+        response = self.request.get(f'https://hacker-news.firebaseio.com/v0/{name}.json?print=pretty')
         text = response.json()
-        header = self.dict_elem['showstories']
-        with open(f'showstories.csv', 'a+') as f:
-            writer = csv.DictWriter(f, fieldnames=header)
-            writer.writeheader()
-            for id in text:
-                response_id = self.request.get(f'https://hacker-news.firebaseio.com/v0/item/{id}.json?print=pretty')
-                json = response_id.json()
-                if json != None:
-                    writer.writerow(json)
-
-    def jobstories(self):
-        response = self.request.get(f'https://hacker-news.firebaseio.com/v0/jobstories.json?print=pretty')
-        text = response.json()
-        header = self.dict_elem['jobstories']
-        with open(f'jobstories.csv', 'a+') as f:
-            writer = csv.DictWriter(f, fieldnames=header)
-            writer.writeheader()
-            for id in text:
-                response_id = self.request.get(f'https://hacker-news.firebaseio.com/v0/item/{id}.json?print=pretty')
-                json = response_id.json()
-                if json != None:
-                    writer.writerow(json)
-
-    def newstories(self):
-        response = self.request.get(f'https://hacker-news.firebaseio.com/v0/newstories.json?print=pretty')
-        text = response.json()
-        header = self.dict_elem['newstories']
-        with open(f'newstories.csv', 'a+') as f:
+        header = self.dict_elem[name]
+        with open(f'{name}.csv', 'a+') as f:
             writer = csv.DictWriter(f, fieldnames=header)
             writer.writeheader()
             for id in text:
@@ -77,18 +37,11 @@ class API(object):
 
 
 if __name__ == '__main__':
+    api = API()
     try:
-        if sys.argv[1] == 'askstories':
-            API().askstories()
-        elif sys.argv[1] == 'showstories':
-            API().showstories()
-        elif sys.argv[1] == 'newstories':
-            API().newstories()
-        elif sys.argv[1] == 'jobstories':
-            API().jobstories()
+        if sys.argv[1] in api.list_name:
+            api.process(sys.argv[1])
         else:
-            print('some problem...')
+            print('unknown method')
     except Exception:
-        API().newstories()
-
-
+        api.process('newstories')
