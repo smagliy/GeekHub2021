@@ -16,7 +16,6 @@ def index(request):
     return render(request, 'homework/index.html')
 
 
-# Askstories.objects.all().values_list('id', flat=True)
 def proccess(name, list_id):
     response = requests.get(f'https://hacker-news.firebaseio.com/v0/{name}.json?print=pretty')
     text = response.json()
