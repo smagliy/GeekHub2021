@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.urls import reverse
@@ -12,16 +13,14 @@ def main(request):
     data = Products.objects.all()
     if value == 'phone':
         data = Products.objects.filter(category=1)
-        return render(request, 'main/main.html', {'data': data})
     elif value == 'tablet':
         data = Products.objects.filter(category=2)
-        return render(request, 'main/main.html', {'data': data})
     elif value == 'laptop':
         data = Products.objects.filter(category=3)
-        return render(request, 'main/main.html', {'data': data})
     return render(request, 'main/main.html', {'data': data})
 
 
+@login_required
 def card_add(request, pk):
     post = get_object_or_404(Products, id=pk)
     Card.objects.create(user=request.user, product=post)
@@ -42,15 +41,17 @@ def add_new_product(request):
     return render(request, 'main/add.html', data)
 
 
+@login_required
 def basket(request):
     data = {'product': Card.objects.filter(user=request.user)}
     return render(request, 'main/basket.html', data)
 
 
 def delete_products(request, pk):
-    try:
-        product = Products.objects.get(id=pk)
-        product.delete()
-        return HttpResponseRedirect(reverse("home"))
-    except Products.DoesNotExist:
-        return HttpResponseNotFound("<p>Product not found</p>")
+    if request.user.is_superuser:
+        try:
+            product = Products.objects.get(id=pk)
+            product.delete()
+            return HttpResponseRedirect(reverse("home"))
+        except Products.DoesNotExist:
+            return HttpResponseNotFound("<p>Product not found</p>")
