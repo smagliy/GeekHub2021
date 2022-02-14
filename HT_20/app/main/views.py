@@ -1,10 +1,14 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.http import HttpResponseRedirect
 from django.http import HttpResponseNotFound
 from django.urls import reverse
 
-from .models import Products, Card
+from rest_framework import viewsets
+
+from .serializers import ProductSerializer, CategorySerializer
+from .models import Products, Category
 from .forms import ProductsForm
 
 
@@ -20,11 +24,23 @@ def main(request):
     return render(request, 'main/main.html', {'data': data})
 
 
-@login_required
-def card_add(request, pk):
-    post = get_object_or_404(Products, id=pk)
-    Card.objects.create(user=request.user, product=post)
-    return HttpResponseRedirect(reverse('home'))
+def card_add(request):
+    product_id = request.POST.get('product_id')
+    cart = request.session.setdefault('cart', {})
+    if product_id:
+        products = cart.setdefault('product', [])
+        products.append(product_id)
+        request.session.modified = True
+    return JsonResponse({'products': request.session['cart']})
+
+
+def cart(request):
+    id_products = request.session['cart']['product']
+    list_all = []
+    for id in id_products:
+        product = Products.objects.filter(id=id)
+        list_all.append(product)
+    return render(request, 'main/basket.html', {'all': list_all})
 
 
 def add_new_product(request):
@@ -41,12 +57,6 @@ def add_new_product(request):
     return render(request, 'main/add.html', data)
 
 
-@login_required
-def basket(request):
-    data = {'product': Card.objects.filter(user=request.user)}
-    return render(request, 'main/basket.html', data)
-
-
 def delete_products(request, pk):
     if request.user.is_superuser:
         try:
@@ -55,3 +65,15 @@ def delete_products(request, pk):
             return HttpResponseRedirect(reverse("home"))
         except Products.DoesNotExist:
             return HttpResponseNotFound("<p>Product not found</p>")
+
+
+class ProductView(viewsets.ModelViewSet):
+    queryset = Products.objects.all()
+    serializer_class = ProductSerializer
+
+
+class CategoryView(viewsets.ModelViewSet):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+
+

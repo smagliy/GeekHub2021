@@ -18,8 +18,8 @@
                <ul class="nav">
                    {% if user.is_authenticated %}
                         <li><p>User: {{ user.get_username }}</p></li>
-                        <li><a href="{% url 'basket' %}">Card</a></li>
                         <li><a href="{% url 'logout'%}?next={{request.path}}">Logout</a></li>
+                        <li><a href="{% url 'cart' %}">Cart</a></li>
                     {% if user.is_superuser %}
                         <li><a href="{% url 'add' %}">Add new products</a></li>
                     {% endif %}

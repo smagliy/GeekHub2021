@@ -17,7 +17,3 @@ class Products(models.Model):
     def __str__(self):
         return self.name
 
-
-class Card(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    product = models.ForeignKey(Products, on_delete=models.CASCADE)
