@@ -29,21 +29,20 @@
         </div>
       </div>
    {% endfor %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
     $('#cart').click(function (e) {
         e.preventDefault();
-        var _this = $(this);
-        var urlButton = _this.attr('data-href');
+        var urlButton = $(this).attr('data-href');
         $.ajax({
             url: urlButton,
-            data: _this.serialize(),
+            data: $(this).serialize(),
             beforeSend: function(xhr, settings){
                 xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
             },
             type: 'post',
             success: function (res) {
                 console.log(res);
+                console.log('Done');
             },
             error: function () {
                 console.log('error');
