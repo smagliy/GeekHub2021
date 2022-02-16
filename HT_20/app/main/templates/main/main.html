@@ -13,7 +13,7 @@
         <button type="submit">GO</button>
     </form>
    {% for d in data %}
-      <div class="card" style="width: 18rem;">
+      <div class="cart_div" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{ d.name }}</h5>
               <p class="card-text">{{ d.description }}</p>
@@ -35,7 +35,7 @@
         var urlButton = $(this).attr('data-href');
         $.ajax({
             url: urlButton,
-            data: $(this).serialize(),
+            data: {'products': $('.product').val()},
             beforeSend: function(xhr, settings){
                 xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
             },
